@@ -24,42 +24,34 @@ def start():
     print('start')
     return None
 
-
-# Modify this function
-def play(state):
-    print("-----")
-    # pprint.pprint(state)
-    legal = get_legal_moves(state)
-    print(legal)
-    # # print(len(legal))
-    #
-    test = random.choice(legal)
-    print(test)
-    return test[0], test[1]
-    # # return 'a', (None,)
-
-    # test = get_best_move(state)
-    # print(test)
-
-    # return test
-
-
 # Modify this function
 def end(victory):
     print(f'Victor: {victory}')
     return None
 
+def futureUse1410(board):
+    for x in board:
+        if x['type'] is "minion" and (x['id'] == 10 or x['id'] ==14):
+            return True
+    return False
+
+def hasStrongNew(oppBoard, mana):
+    ret = {'bool':False}
+    maxAtt = 0
+    for x in range(1,len(oppBoard)):
+        if oppBoard[x]['atk']>5 and oppBoard[x]['atk']>maxAtt and oppBoard[x]['mana']+3>=mana:
+            maxAtt=oppBoard[x]['atk']
+            ret = {'bool':True, 'index': x}
+    return ret
+
 
 def get_best_move_for_ids(state, legal_moves, move_id):
-    dict = {}
-    for i in range(1, 4):
-        moves_with_id = []
-        for move in legal_moves:
-            if move[0] == i:
-                moves_with_id.append(move)
-        dict['i'] = get_best_move(state, moves_with_id)
+    moves_with_id = []
+    for move in legal_moves:
+        if move[0] == move_id:
+            moves_with_id.append(move)
 
-    return dict
+    return get_best_move(state, moves_with_id)
 
 
 def get_best_move(state, moves):
@@ -88,7 +80,7 @@ def get_best_move(state, moves):
                 max_ratio = ratio
                 best_move = move
 
-    return {'ratio': max_ratio, 'move': best_move}
+    return {'value': max_ratio, 'move': best_move}
     # return best_move
 
 
@@ -130,6 +122,69 @@ def get_nb_minions(state):
             nb_minions += 1
 
     return nb_minions
+
+
+def play(state):
+    legal_moves = get_legal_moves(state)
+    return get_best_move(state, legal_moves)
+
+
+# def play(state):
+#     target = 0
+#
+#     legal_moves = get_legal_moves(state)
+#
+#     if futureUse1410(state['player_target']):
+#         return get_best_move_for_ids(state, legal_moves, 3)['move']
+#
+#     if (hasStrongNew(state['opponent_target'], state['opponent_mana'])['bool']):
+#         target = hasStrongNew['index']
+#
+#     if (len(state['player_hand']) < 2):
+#         if (state['player_mana'] < 2):
+#             move = get_best_move_for_ids(state, legal_moves, 3)['move']
+#             move[1][1] = target
+#             return move
+#         else:
+#             bests = get_best_move_for_ids(state, legal_moves, 2)
+#             bests['move'][1][1] = target
+#
+#             bestm = get_best_move_for_ids(state, legal_moves, 3)
+#             bestm['move'][1][1] = target
+#
+#             if (bests['value'] < 1 and bestm['value'] < 0):
+#                 return 0, None
+#             else:
+#                 if (bests['value'] > bestm['value']):
+#                     return bests['move']
+#                 else:
+#                     return bestm['move']
+#     elif len(state['player_target']) < 2 or len(state['player_hand']) > 8:
+#         best = get_best_move_for_ids(state, legal_moves, 1)
+#         if best['value'] < 0:
+#             best = get_best_move_for_ids(state, legal_moves, 3)
+#             best['move'][1][1] = target
+#             if best['value'] < 0:
+#                 best = get_best_move_for_ids(state, legal_moves, 2)
+#                 best['move'][1][1] = target
+#         return best['move']
+#     else:
+#         bests = get_best_move_for_ids(state, legal_moves, 2)
+#         bests['move'][1][1] = target
+#
+#         bestm = get_best_move_for_ids(state, legal_moves, 3)
+#         bestm['move'][1][1] = target
+#
+#         bestd = get_best_move_for_ids(state, legal_moves, 1)
+#         if bests['value'] < 1 and bestm['value'] < 0 and bestd['value'] < 0:
+#             return 0, None
+#         else:
+#             if bests['value'] > bestm['value'] and bests['value'] > bestd['value']:
+#                 return bests['move']
+#             elif bestd['value'] > bestm['value'] and bestd['value'] > bests['value']:
+#                 return bestd['move']
+#             else:
+#                 return bestm['move']
 
 
 # Don't touch this function
