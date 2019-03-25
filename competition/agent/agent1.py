@@ -1,57 +1,39 @@
-import pprint
-import random
-from random import randint
-
-"""
-Make sure your HP doesn't go below 0: possible with a move by you?-
-Make sure that you have enough mana?
-Make sure that you don't have too much mana?
-What does mana reset mean?
-Minions have to wait a turn after being summoned before attacking: can't attack = true
-
-- Is there a f'n to simulate state?
-- Is there a time limit?
-- Can you play a card that requires more mana than you have?
-- What does mana reset mean?
-
-Make sure that card not empty
-"""
-
-
-
 # Modify this function
 def start():
     print('start')
     return None
+
 
 # Modify this function
 def end(victory):
     print(f'Victor: {victory}')
     return None
 
-def futureUse1410(board):
-    for x in board:
-        if x['type'] is "minion" and (x['id'] == 10 or x['id'] ==14):
-            return True
-    return False
 
-def hasStrongNew(oppBoard, mana):
-    ret = {'bool':False}
-    maxAtt = 0
-    for x in range(1,len(oppBoard)):
-        if oppBoard[x]['atk']>5 and oppBoard[x]['atk']>maxAtt and oppBoard[x]['mana']+3>=mana:
-            maxAtt=oppBoard[x]['atk']
-            ret = {'bool':True, 'index': x}
-    return ret
-
-
-def get_best_move_for_ids(state, legal_moves, move_id):
-    moves_with_id = []
-    for move in legal_moves:
-        if move[0] == move_id:
-            moves_with_id.append(move)
-
-    return get_best_move(state, moves_with_id)
+# def futureUse1410(board):
+#     for x in board:
+#         if x['type'] is "minion" and (x['id'] == 10 or x['id'] ==14):
+#             return True
+#     return False
+#
+#
+# def hasStrongNew(oppBoard, mana):
+#     ret = {'bool': False}
+#     maxAtt = 0
+#     for x in range(1,len(oppBoard)):
+#         if oppBoard[x]['atk']>5 and oppBoard[x]['atk']>maxAtt and oppBoard[x]['mana']+3>=mana:
+#             maxAtt=oppBoard[x]['atk']
+#             ret = {'bool': True, 'index': x}
+#     return ret
+#
+#
+# def get_best_move_for_ids(state, legal_moves, move_id):
+#     moves_with_id = []
+#     for move in legal_moves:
+#         if move[0] == move_id:
+#             moves_with_id.append(move)
+#
+#     return get_best_move(state, moves_with_id)
 
 
 def get_best_move(state, moves):
@@ -80,8 +62,18 @@ def get_best_move(state, moves):
                 max_ratio = ratio
                 best_move = move
 
-    return {'value': max_ratio, 'move': best_move}
-    # return best_move
+    # return {'value': max_ratio, 'move': best_move}
+    return best_move
+
+
+def get_nb_minions(state):
+    nb_minions = 0
+
+    for i in range(len(state['player_target'])):
+        if state['player_target'][i]['type'] == 'minion':
+            nb_minions += 1
+
+    return nb_minions
 
 
 def get_legal_moves(state):
@@ -112,16 +104,6 @@ def get_legal_moves(state):
     moves.append((4, None))
 
     return moves
-
-
-def get_nb_minions(state):
-    nb_minions = 0
-
-    for i in range(len(state['player_target'])):
-        if state['player_target'][i]['type'] == 'minion':
-            nb_minions += 1
-
-    return nb_minions
 
 
 def play(state):
